@@ -1,8 +1,8 @@
-baseURL = 'https://dinglucheng.com'
+baseURL = 'https://titen.group'
 languageCode = 'zh_CN'
-title = '丁路程的量化交易'
+title = 'Titen Group'
 theme = 'coder'
 
 [params]
-author = "丁路程的量化交易"
+author = "Titen Group"
 keywords = "CTA,股票,期货,期权,基金,量化交易"
