@@ -1,0 +1,16 @@
+{{ define "main" }}
+<div class="flex fixed left-1/3 top-1/3 translate-x-[-25%] translate-y-[-25%] drop-shadow-xl items-stretch border border-gray-200">
+    <form class="flex flex-col w-1/3 p-5 bg-white">
+        <h1 class="uppercase mb-10">Titen Group</h1>
+        <div class="flex leading-10 py-2 border-b border-gray-500">
+            <i class="mr-2 text-gray-300 iconfont icon-geren"></i><input type="text" name="username" placeholder="Username"/>
+        </div>
+        <div class="flex leading-10 py-2 border-b border-gray-500">
+            <i class="mr-2 text-gray-300 iconfont icon-mimasuo"></i><input type="password" name="password"
+                                                                      placeholder="Password"/>
+        </div>
+        <button class="mt-10">登录</button>
+    </form>
+    <img src="/banner.png" alt="Banner" class="w-2/3">
+</div>
+{{ end }}

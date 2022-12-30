@@ -1,0 +1,57 @@
+{{ define "main" }}
+<div id="banner" class="h-[460px] w-full">
+
+</div>
+
+<div class="grid grid-cols-4 mx-auto w-2/3 w-min-[800px] text-center gap-8">
+    <div class="my-8">
+        <h2 class="leading-10 font-bold">总资金量</h2>
+        <p>1.25 亿</p>
+    </div>
+    <div class="my-8">
+        <h2 class="leading-10 font-bold">客户数</h2>
+        <p>6</p>
+    </div>
+    <div class="my-8">
+        <h2 class="leading-10 font-bold">运行时间</h2>
+        <p>100 天</p>
+    </div>
+    <div class="my-8">
+        <h2 class="leading-10 font-bold">交易平台</h2>
+        <p>QMT</p>
+    </div>
+</div>
+
+<div class="mx-auto w-full text-center bg-gray-200">
+    <div class="grid grid-cols-6 w-2/3 mx-auto gap-8">
+        <div class="my-12">
+            <h2 class="leading-10">客户 1</h2>
+        </div>
+        <div class="my-12">
+            <h2 class="leading-10">客户 2</h2>
+        </div>
+        <div class="my-12">
+            <h2 class="leading-10">客户 3</h2>
+        </div>
+        <div class="my-12">
+            <h2 class="leading-10">客户 4</h2>
+        </div>
+        <div class="my-12">
+            <h2 class="leading-10">客户 5</h2>
+        </div>
+        <div class="my-12">
+            <h2 class="leading-10">客户 6</h2>
+        </div>
+    </div>
+</div>
+
+<style>
+    div#banner {
+        background-image: url("banner.png");
+        background-repeat: no-repeat;
+        background-position-x: center;
+        background-position-y: 43%;
+        background-size: cover;
+    }
+</style>
+{{ end }}

@@ -1,150 +1,51 @@
 <!DOCTYPE html>
-<html lang="{{ .Site.Language.Lang }}">
 
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="color-scheme" content="light dark">
+{{ $.Scratch.Delete "bg_color" }}<!---->
+{{ $.Scratch.Delete "social_list" }}<!---->
+{{ $.Scratch.Delete "avatar_url" }}<!---->
 
-    {{ if .Site.Params.csp }}
-    {{ partial "csp.html" . }}
-    {{ end }}
+<!-- bg_color -->
+{{ $color_map := dict "linen" "#faf6f1" "wheat" "#f1efe1" "gray" "#fbfbfb"
+"light" "#fff" }}<!---->
+{{ $.Scratch.Set "bg_color" (index $color_map (site.Params.color | default
+(print "linen"))) }}<!---->
 
-    {{ with .Site.Params.author }}
-    <meta name="author" content="{{ . }}">
-    {{ end }}
-    <meta name="description" content="{{ .Description | default (.Summary | default .Site.Params.description ) }}">
-    <meta name="keywords" content="{{ (delimit .Keywords " ,") | default .Site.Params.keywords }}">
+<!-- social_list -->
+{{ $social_params := slice "twitter" "github" "instagram" "mastodon" "rss" }}<!---->
+{{ range $social_params }}<!---->
+{{ if isset site.Params . }}<!---->
+{{ $.Scratch.Add "social_list" (slice .) }}<!---->
+{{ end }}<!---->
+{{ end }}<!---->
 
-    {{ template "_internal/twitter_cards.html" . }}
-    {{ template "_internal/opengraph.html" . }}
+<!-- avatar_url -->
+{{ if site.Params.avatar }}<!---->
+{{ if in site.Params.avatar "http" }}<!---->
+{{ $.Scratch.Set "avatar_url" site.Params.avatar }}<!---->
+{{ else }}<!---->
+{{ $official_cdn := "https://www.gravatar.com/avatar/" }}<!---->
+{{ $cdn := (site.Params.gravatarCdn | default $official_cdn) }}<!---->
+{{ $md5 := (md5 site.Params.avatar) }}<!---->
+{{ $avatar_url := print $cdn $md5 "?s=160&d=identicon" }}<!---->
+{{ $.Scratch.Set "avatar_url" $avatar_url }}<!---->
+{{ end }}<!---->
+{{ end }}<!---->
 
-    <title>{{ block "title" . }}{{ .Site.Title }}{{ end }}</title>
-
-    {{ if .Permalink }}
-    <link rel="canonical" href="{{ .Permalink }}">
-    {{ end }}
-
-    {{ if .Site.IsServer }}
-    {{ $cssOpts := (dict "targetPath" "css/coder.css" "enableSourceMap" true ) }}
-    {{ $styles := resources.Get "scss/coder.scss" | resources.ExecuteAsTemplate "style.coder.css" . | toCSS $cssOpts }}
-    <link rel="stylesheet" href="{{ $styles.RelPermalink }}" media="screen">
-    {{ else }}
-    {{ $cssOpts := (dict "targetPath" "css/coder.css" ) }}
-    {{ $styles := resources.Get "scss/coder.scss" | resources.ExecuteAsTemplate "style.coder.css" . | toCSS $cssOpts |
-    minify | fingerprint }}
-    <link rel="stylesheet" href="{{ $styles.RelPermalink }}" integrity="{{ $styles.Data.Integrity }}"
-          crossorigin="anonymous" media="screen"/>
-    {{ end }}
-
-    {{ if .Site.Params.rtl }}
-    {{ if .Site.IsServer }}
-    {{ $cssOpts := (dict "targetPath" "css/coder-rtl.css" "enableSourceMap" true ) }}
-    {{ $styles := resources.Get "scss/coder-rtl.scss" | resources.ExecuteAsTemplate "style.coder-rtl.css" . | toCSS
-    $cssOpts }}
-    <link rel="stylesheet" href="{{ $styles.RelPermalink }}" media="screen">
-    {{ else }}
-    {{ $cssOpts := (dict "targetPath" "css/coder-rtl.css" ) }}
-    {{ $styles := resources.Get "scss/coder-rtl.scss" | resources.ExecuteAsTemplate "style.coder-rtl.css" . | toCSS
-    $cssOpts | minify | fingerprint }}
-    <link rel="stylesheet" href="{{ $styles.RelPermalink }}" integrity="{{ $styles.Data.Integrity }}"
-          crossorigin="anonymous" media="screen"/>
-    {{ end }}
-    {{ end }}
-
-    {{ if or (eq .Site.Params.colorScheme "auto") (eq .Site.Params.colorScheme "dark") }}
-    {{ if .Site.IsServer }}
-    {{ $cssOpts := (dict "targetPath" "css/coder-dark.css" "enableSourceMap" true ) }}
-    {{ $styles := resources.Get "scss/coder-dark.scss" | resources.ExecuteAsTemplate "style.coder-dark.css" . | toCSS
-    $cssOpts }}
-    <link rel="stylesheet" href="{{ $styles.RelPermalink }}" media="screen">
-    {{ else }}
-    {{ $cssOpts := (dict "targetPath" "css/coder-dark.css" ) }}
-    {{ $styles := resources.Get "scss/coder-dark.scss" | resources.ExecuteAsTemplate "style.coder-dark.css" . | toCSS
-    $cssOpts | minify | fingerprint }}
-    <link rel="stylesheet" href="{{ $styles.RelPermalink }}" integrity="{{ $styles.Data.Integrity }}"
-          crossorigin="anonymous" media="screen"/>
-    {{ end }}
-    {{ end }}
-
-    {{ range .Site.Params.customCSS }}
-    {{ if $.Site.IsServer }}
-    {{ $styles := resources.Get . }}
-    <link rel="stylesheet" href="{{ $styles.RelPermalink }}" media="screen">
-    {{ else }}
-    {{ $styles := resources.Get . | minify | fingerprint }}
-    <link rel="stylesheet" href="{{ $styles.RelPermalink }}" integrity="{{ $styles.Data.Integrity }}"
-          crossorigin="anonymous" media="screen"/>
-    {{ end }}
-    {{ end }}
-
-    {{ range .Site.Params.customSCSS }}
-    {{/* We don't change the targetPath to because it's transparent to users */}}
-    {{ if $.Site.IsServer }}
-    {{ $cssOpts := (dict "enableSourceMap" true ) }}
-    {{ $styles := resources.Get . | toCSS $cssOpts }}
-    <link rel="stylesheet" href="{{ $styles.RelPermalink }}" media="screen">
-    {{ else }}
-    {{ $styles := resources.Get . | toCSS | minify | fingerprint }}
-    <link rel="stylesheet" href="{{ $styles.RelPermalink }}" integrity="{{ $styles.Data.Integrity }}"
-          crossorigin="anonymous" media="screen"/>
-    {{ end }}
-    {{ end }}
-
-    <link rel="icon" type="image/png" href="{{ .Site.Params.favicon_32 | default " /images/favicon-32x32.png" | relURL }}" sizes="32x32">
-    <link rel="icon" type="image/png" href="{{ .Site.Params.favicon_16 | default " /images/favicon-16x16.png" | relURL }}" sizes="16x16">
-
-    <link rel="apple-touch-icon" href="{{ .Site.Params.touchicon | default " /images/apple-touch-icon.png" | relURL }}">
-    <link rel="apple-touch-icon" sizes="180x180" href="{{ .Site.Params.touchicon | default " /images/apple-touch-icon.png" | relURL }}">
-
-    {{ range .AlternativeOutputFormats -}}
-    {{ printf `
-    <link rel="%s" type="%s" href="%s" title="%s"/>
-
-    ` .Rel .MediaType.Type .RelPermalink $.Site.Title | safeHTML }}
-    {{ end -}}
-
-    <link rel="stylesheet" href="{{ "output.css" | relURL }}">
-
-    {{ hugo.Generator }}
-</head>
-
-{{ $csClass := "colorscheme-light" }}
-{{ if eq .Site.Params.colorScheme "dark" }}
-{{ $csClass = "colorscheme-dark" }}
-{{ else if eq .Site.Params.colorScheme "auto" }}
-{{ $csClass = "colorscheme-auto" }}
-{{ end }}
-<body class="preload-transitions {{ $csClass }}{{ if .Site.Params.rtl }} rtl{{ end }}">
-{{ partial "float" . }}
-<main class="wrapper">
+<html
+  class="not-ready text-sm lg:text-base"
+  style="--bg: {{ $.Scratch.Get `bg_color` }}"
+  lang="{{ site.LanguageCode }}"
+>
+  {{ partial "head.html" . }}
+  <body class="text-black duration-200 ease-out dark:text-white">
+  {{ if ne .Params.layout "login" }}
     {{ partial "header.html" . }}
-
-    <div class="content">
-        {{ block "content" . }}{{ end }}
-    </div>
-
+    <main class="relative min-h-[calc(100%-10rem)] w-full pt-20 pb-20 dark:prose-invert">
+      {{ block "main" . }}{{ end }}
+    </main>
     {{ partial "footer.html" . }}
-</main>
-
-{{ if .Site.IsServer }}
-{{ $script := resources.Get "js/coder.js" }}
-<script src="{{ $script.RelPermalink }}"></script>
-{{ else }}
-{{ $script := resources.Get "js/coder.js" | minify | fingerprint }}
-<script src="{{ $script.RelPermalink }}" integrity="{{ $script.Data.Integrity }}"></script>
-{{ end }}
-
-{{ range .Site.Params.customJS }}
-{{ if $.Site.IsServer }}
-{{ $script := resources.Get . }}
-<script src="{{ $script.RelPermalink }}"></script>
-{{ else }}
-{{ $script := resources.Get . | minify | fingerprint }}
-<script src="{{ $script.RelPermalink }}" integrity="{{ $script.Data.Integrity }}"></script>
-{{ end }}
-{{ end }}
-
-</body>
-
+  {{ else }}
+    {{ block "main" . }}{{ end }}
+  {{ end }}
+  </body>
 </html>
