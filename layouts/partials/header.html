@@ -1,6 +1,7 @@
-<header class="w-full flex h-[5rem] lg:justify-center bg-black text-white uppercase fixed">
-    <div class="relative z-50 mx-auto flex items-center w-2/3 min-w-[800px]">
+<header class="w-full flex h-[5rem] lg:justify-center bg-black text-white uppercase fixed top-0">
+    <div class="relative z-50 mx-auto flex items-center w-2/3 min-w-[800px] justify-between">
         <a class="-translate-x-[1px] -translate-y-0.5 text-3xl font-bold" href="{{ `` | absURL }}">{{ site.Title }}</a>
+        <a href="/login">登录</a>
     </div>
     <a class="btn-menu relative z-50 -mr-8 flex h-[5rem] w-[5rem] shrink-0 cursor-pointer flex-col items-center justify-center gap-2.5 lg:hidden"></a>
     {{ $bg_color := $.Scratch.Get "bg_color" }}
