@@ -23,25 +23,17 @@
 </div>
 
 <div class="mx-auto w-full text-center bg-gray-200">
+    <h2 class="text-center pt-12 font-bold">案例展示</h2>
     <div class="grid grid-cols-6 w-2/3 mx-auto gap-8">
+        {{ with .Site.GetPage "/posts" }}
+        {{ range .Pages }}
         <div class="my-12">
-            <h2 class="leading-10">客户 1</h2>
+            <a href="{{ .Permalink }}">
+                <h3 class="leading-10">{{ .Title }}</h3>
+            </a>
         </div>
-        <div class="my-12">
-            <h2 class="leading-10">客户 2</h2>
-        </div>
-        <div class="my-12">
-            <h2 class="leading-10">客户 3</h2>
-        </div>
-        <div class="my-12">
-            <h2 class="leading-10">客户 4</h2>
-        </div>
-        <div class="my-12">
-            <h2 class="leading-10">客户 5</h2>
-        </div>
-        <div class="my-12">
-            <h2 class="leading-10">客户 6</h2>
-        </div>
+        {{ end }}
+        {{ end }}
     </div>
 </div>
 

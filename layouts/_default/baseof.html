@@ -40,7 +40,7 @@
   <body class="text-black duration-200 ease-out dark:text-white">
   {{ if ne .Params.layout "login" }}
     {{ partial "header.html" . }}
-    <main class="relative min-h-[calc(100%-10rem)] w-full pt-20 pb-20 dark:prose-invert">
+    <main class="relative min-h-[calc(100%-10rem)] w-full pt-20 dark:prose-invert">
       {{ block "main" . }}{{ end }}
     </main>
     {{ partial "footer.html" . }}
